@@ -1,4 +1,4 @@
-<h1> **GitHub reporitory for**</h1>
+<h1> GitHub reporitory for</h1>
 
 **Abstract**
 
