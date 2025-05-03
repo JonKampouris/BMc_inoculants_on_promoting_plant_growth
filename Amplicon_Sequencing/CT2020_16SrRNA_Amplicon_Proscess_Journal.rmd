@@ -7,6 +7,9 @@ output: pdf_document
 #############################################################
 Code in Bash Shell
 #############################################################
+Note: Download the samples from BioProject PRJNA1045550 and select 
+2020 samples
+
 #!/bin/bash
 #Author: Ioannis Kampouris
 #Purpose: Use fastqc and multiqc in the R Server (UBUNTU OS)
@@ -53,49 +56,17 @@ library(readr)
 library(tidyverse)
 library(ggplot2)
 
-set.seed(17011990)
+set.seed(01122022)
 ```
-Average quality Above Phred_Score 30 for most of the samples, I can continue.
 
-```{r, fig.height=10, fig.width=10}
-quality_FW_2020=read_delim(paste0(
-"/home/ioannis.kampouris/QC/FW/",
-"multiqc_data/mqc_fastqc_per_base_sequence_quality_plot_1.txt"), delim = "\t")%>%
-  gather(-Sample, key="Sequence", value = "Average_Phred_Score") %>%
-  mutate(Type="Forward")
-
-quality_RE_2020=read_delim(paste0(
-"/home/ioannis.kampouris/",
-"QC/RE/multiqc_data/mqc_fastqc_per_base_sequence_quality_plot_1.txt"), 
-delim = "\t")%>%
-gather(-Sample, key="Sequence", value = "Average_Phred_Score")%>%
-mutate(Type="Reverse")
-QC_both_FW_and_RE_2020=full_join(quality_FW_2020, quality_RE_2020, 
-by=colnames(quality_FW_2020))
-
-ggplot(QC_both_FW_and_RE_2020, aes(y=Average_Phred_Score,
-x=as.numeric(Sequence), colour=Sample))+
-facet_grid(~Type)+ geom_line() + 
-geom_hline(yintercept = 25, linetype="dashed")+
-theme_bw() + theme( axis.text.y = 
-element_text( size=25, face = "bold", colour="black")) +
-theme(axis.text.x = 
-element_text(size = 25, face = "bold", colour="black")) +
-theme(legend.text = element_text( size=25, face="bold", colour = "black")) + 
-theme( axis.title.y = element_text( size=25, face = "bold", colour="black")) + 
-theme(axis.title.x = element_text(size = 25, face = "bold", colour="black")) +
-theme(legend.title =  element_text( size=25, face="bold", colour = "black"))+
-theme(strip.background =  element_rect( fill = "#222d80",  colour = "#222d80"))+
-theme(strip.text  =  element_text( size=10, face="bold", colour = "white")) +
-theme(legend.position = "none") +
-ggtitle("Raw Sequences quality 2020") + xlab("Base Number") + ylim(20, 40)
-
-```  
 #Start dada2 for the 2020 samples
+Assumes that you have downloaded all 2020 samples from
+bioproject PRJNA1045550 and placed them in the folder cutadapt after 
+trimming for the primers (trimm_fastQ_file.sh)
+
 ```{r, fig.height=10, fig.width=10}
 library(dada2)
-path_2020 <-paste0( "/home/ioannis.kampouris/",
-"trimmed_cutadapt")
+path_2020 <-paste0( "trimmed_cutadapt")
 # CHANGE ME to the directory containing your demultiplexed fastq files
 filtpathF_2020 <- file.path(path_2020, "FW_filtered") 
 # Filtered forward files go into the pathF/filtered/ subdirectory
@@ -181,8 +152,8 @@ complete_ASV_table$ASV=paste0("ASV", rownames(complete_ASV_table))
 
 clean_ASV_table = complete_ASV_table%>%
   filter(Kingdom!="NA"&Order!="Chloroplast"&Family!="Mitochondria")%>%select(Sequence, ASV, everything())
-write.csv(complete_ASV_table,"dada2_out/ASV_Table_LTE_2020.csv")
-write.csv(clean_ASV_table,"dada2_out/plastid_clean_ASV_Table_LTE_2020.csv")
+write.csv(complete_ASV_table,"~/ASV_Table_LTE_2020.csv")
+write.csv(clean_ASV_table,"~/plastid_clean_ASV_Table_LTE_2020.csv")
 track_final= cbind(track,colSums(clean_ASV_table[,9:ncol(clean_ASV_table)]) )
 track_final_ratio= cbind(track,colSums(clean_ASV_table[,9:ncol(clean_ASV_table)]) )/track[,1]
 
@@ -199,6 +170,6 @@ fastaLines = c(fastaLines,as.character(data[rowNum,"Sequence"]))
   close(fileConn)
 }
 
-writeFasta(clean_ASV_table%>%select(ASV, Sequence), "dada2_out/ASVs_LTE_2020.fa")
+writeFasta(clean_ASV_table%>%select(ASV, Sequence), "~/ASVs_LTE_2020.fa")
 
 ```

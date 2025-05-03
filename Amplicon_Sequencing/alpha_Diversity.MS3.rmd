@@ -1,0 +1,320 @@
+
+```{r}
+ASVtable_working <- read.csv("~/plastid_clean_low_read_clean_contaminant_free_ASV_Table_LTE_2020.csv", row.names = 1)
+gathered_ASV_table=gather(ASVtable_working[c(1,3:114)], -ASV, key = "Sample", value = "Abundance")
+#Assign metadata via sample names
+metadata_assign=data.frame(Sample=unique(gathered_ASV_table$Sample))%>%
+  mutate(Category=Sample)%>%
+  mutate(Category=str_replace(Category, "FSRW", "Root-Associated_Soil/Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "RHRW", "Rizosphere/Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "RW", "Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "FS", "Root-Associated_Soil;"))%>%
+  mutate(Category=str_replace(Category, "RH", "Rhizosphere;"))%>%
+  mutate(Category=str_replace(Category, ".T0", "T0-Soil;"))%>%
+   mutate(., Category=str_replace(Category, ".raw", ""))%>%
+  separate(., Category, into = c("Type", "Rest"), sep=";")%>%
+mutate(., Rest=str_replace(Rest, ".CT.Ext.C", "CT;Extensive;Ctrl;"))%>%
+  mutate(., Rest=str_replace(Rest, ".CT.Ext.I", "CT;Extensive;BMc;"))%>%
+       mutate(., Rest=str_replace(Rest, ".CTEx.I", "CT;Extensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTEx.C", "CT;Extensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.I", "CT;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.I", "CT;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CT.Int.C", "CT;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CT.Int.I", "CT;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CTEx.C", "CT;Extensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".CT.Int.I", "CT;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, "CTExtT0-Soil.", "CT;Extensive;T0-Soil;")) %>%
+       mutate(., Rest=str_replace(Rest, "CTIntT0-Soil.", "CT;Intensive;T0-Soil;")) %>%
+       mutate(., Rest=str_replace(Rest, "MPExtT0-Soil.", "MP;Extensive;T0-Soil;")) %>%
+       mutate(., Rest=str_replace(Rest, "MPIntT0-Soil.", "MP;Intensive;T0-Soil;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MP.Ext.C", "MP;Extensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MP.Ext.I", "MP;Extensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPEx.I", "MP'Extensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPEx.C1", "MP;Extensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.I", "MP;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.I", "MP;Intensive;BMc;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MP.Int.C", "MP;Intensive;Ctrl;")) %>%
+       mutate(., Rest=str_replace(Rest, ".MP.Int.I", "MP;Intensive;BMc;")) %>%
+  separate(., Rest, into=(c("Practice1", "N-Fertilization_Intensity", "Treatment", "Block")), sep = ";")%>% 
+    filter(., Practice1=="CT")
+RS_metadata=filter(metadata_assign, Type=="Rhizosphere")
+rownames(ASVtable_working)=ASVtable_working$ASV
+ASVtable1=( ASVtable_working[,RS_metadata$Sample])
+ASVtable2=apply(ASVtable1, 2, function(x) 100*(x)/sum(x))
+
+#Alpha Diversity Metrics
+#First the functions
+Species.richness <- function(x)
+{
+  # Count only the OTUs that are present >0.5 normalized counts (normalization produces real values for counts)
+  count=sum(x[x>0]^0)
+  return(count)
+}
+
+# Calculate the Shannon diversity index
+Shannon.entropy <- function(x)
+{
+  total=sum(x)
+  se=-sum(x[x>0]/total*log(x[x>0]/total))
+  return(se)
+}
+
+# Calculate the effective number of species for Shannon
+Shannon.effective <- function(x)
+{
+  total=sum(x)
+  se=round(exp(-sum(x[x>0]/total*log(x[x>0]/total))),digits =2)
+  return(se)
+}
+
+# Calculate the Simpson diversity index
+Simpson.concentration <- function(x)
+{
+  total=sum(x)
+  si=1/sum((x[x>0]/total)^2)
+  return(si)
+}
+
+# Calculate the effective number of species for Simpson
+Simpson.effective <- function(x)
+{
+  total=sum(x)
+  si=round(1/sum((x[x>0]/total)^2),digits =2)
+  return(si)
+}
+
+
+
+#View(Rarefied_Table_rounded)
+my_otu_table <-data.frame(t(ASVtable2))
+# Apply diversity functions to table
+otus_div_stats<-data.frame(my_otu_table[,0])
+otus_div_stats$Richness<-apply(my_otu_table,1,Species.richness)
+otus_div_stats$`Shannon Index`<-apply(my_otu_table,1,Shannon.entropy)
+otus_div_stats$Sample=rownames(otus_div_stats)
+otus_div_stats2=otus_div_stats%>%gather(., -Sample, key = "Metric", value="Value")
+otus_div_stats2$Metric=factor(otus_div_stats2$Metric, levels = c("Richness", "Shannon Index") )
+otus_div_stats3=otus_div_stats2%>%
+         full_join(RS_metadata, by="Sample")
+
+
+new_with_letters=list()
+for(i in unique(paste0(otus_div_stats3$Metric))){
+file1=filter(otus_div_stats3, Metric==paste0(i)) 
+file1$G=paste0(file1$`N-Fertilization_Intensity`,"_",file1$Treatment)
+dunns= dunn.test::dunn.test(file1$Value, file1$G, method = "BH")
+comparisons=data.frame(comparisons=dunns$comparisons, p=dunns$P.adjusted)%>%
+  separate(., "comparisons", into = c("row","col"), sep = " - ")
+orderlist= aggregate( file1, Value~G, max)
+
+comparisons=full_join(comparisons, orderlist%>%mutate(row=G), by="row")%>%na.omit()
+comparisons=comparisons[order(comparisons$Value, decreasing = T),]
+names1=paste0(comparisons$row,"-", comparisons$col)
+p=comparisons$p
+names(p)=names1
+letters=  multcompView::multcompLetters(p,  compare = "<", reversed =F)$Letters%>%as.data.frame()
+
+colnames(letters)="L1"
+letters$G=rownames(letters)
+file1=full_join(file1,letters)%>%full_join(select(orderlist, G, max=Value))
+new_with_letters=rbind(new_with_letters,file1)
+}
+
+
+alphaplots_ASVs= ggplot(new_with_letters, 
+       aes(x=paste0( `N-Fertilization_Intensity`), y=Value, fill=Treatment, 
+           ))+
+  geom_boxplot() + 
+  theme_pubr(border=T) + 
+  facet_wrap(~Metric, scales = "free_y", nrow = 1, strip.position = "left")+
+  theme(strip.placement = "outside")+
+  scale_fill_manual(name="",values=c( "#ff9900","#146eb4"))+
+  theme(strip.background = element_rect(colour="white", fill="white"))+
+  theme( axis.text.y = element_text( size=15, face = "bold", colour="black")) +
+  theme(axis.text.x = element_text(size = 15, face = "bold", colour="black", angle = 0)) +
+  theme(legend.text = element_text( size=25, face="bold", colour = "black")) + 
+  theme( axis.title.y = element_text( size=15, face = "bold", colour="black")) + 
+  theme(axis.title.x = element_text(size = 15, face = "bold", colour="black")) +
+  theme(legend.title =  element_text( size=25, face="bold", colour = "black")) +
+  guides(shape=guide_legend(override.aes = list(size=22), ncol=1)) + 
+  guides(size=guide_legend( ncol=1)) + #geom_errorbar(stat="summary",position = position_dodge2(width = 1))+
+  ylab("")+xlab("N-Fertilization_Intensity")+
+  theme(strip.text = element_text(size = 25, colour="black"))+
+geom_text(aes(y=max+Value*.01,label=L1), size=5, stat = "summary", position = position_dodge2(width = 0.75))
+
+```
+
+
+```{r}
+fungi_RA=   read.table(paste0("~/otu_RH.fungi.Ioannis.txt"), sep=" ")%>%t()
+
+fungi_RA=apply(fungi_RA, 1, function(x) 100*(x)/sum(x))%>%as.data.frame()%>%
+  rownames_to_column(var="Col")
+fungi_RA$OTU=paste0("OTU", row.names(fungi_RA))
+
+OTU_Table_count1=read.table(paste0("/home/ioannis.kampouris/",
+                                   "DiControl_JKI_Phase3_repos/",
+                                   "MS3_correlation_network/",
+                                   "otu_RH.fungi.Ioannis.txt"), sep=" ")%>%
+  rownames_to_column(var="Col") %>%full_join(select(fungi_RA, Col, OTU), by="Col")%>%
+  select(-Col)%>%column_to_rownames(var="OTU")%>%t()%>%
+  as.data.frame()
+fungi_taxonomy=   read.table(paste0("/home/ioannis.kampouris/",
+                              "DiControl_JKI_Phase3_repos/",
+                              "MS3_correlation_network/",
+                              "ITS2_CT_2020_TAX_reduced.txt"), sep="\t")%>%
+
+  rownames_to_column(var="Col")%>%full_join(fungi_RA%>%select(Col, OTU))%>%filter(
+    OTU!="NA"
+  )
+
+
+
+fungi_taxonomy[fungi_taxonomy=="NA"]="Unclassified"
+fungi_taxonomy[fungi_taxonomy=="uncultured"]<-"Unclassified"
+fungi_taxonomy[fungi_taxonomy=="metagenome"]<-"Unclassified"
+
+gathered_fungi_table=gather(fungi_RA, -OTU, key = "Sample", value = "Abundance")
+
+#Assign metadata via sample names
+metadata_assign=data.frame(Sample=unique(gathered_fungi_table$Sample))%>%
+  mutate(Category=Sample)%>% 
+  separate(., Category, into=(c("Type", "Practice1", "N-Fertilization_Intensity", "Treatment")), sep = "_")%>% 
+  filter(., Practice1=="CT")
+
+metadata_assign$Block=substr(metadata_assign$Treatment,nchar(metadata_assign$Treatment), nchar(metadata_assign$Treatment)+1)
+metadata_assign$Treatment2=substr(metadata_assign$Treatment,1, nchar(metadata_assign$Treatment)-1)
+
+
+metadata_assign$Treatment=factor(metadata_assign$Treatment2, c("Ctrl","BMc"))
+RS_metadata=filter(metadata_assign, Type=="RH")
+fungi_taxonomy2=mutate(fungi_taxonomy%>%select(-Col), Genus=paste0(phylum,";",class,";",order,";",family,";",genus))%>%
+  mutate(., Family=paste0(phylum,";",class,";",order,";",family))%>%
+  mutate(., Order=paste0(phylum,";",class,";",order))%>%
+  mutate(., Class=paste0(phylum,";",class))%>%mutate(., OTU2=paste0(genus,";",OTU))%>%
+  mutate(Phylum=phylum)
+
+
+
+input1=fungi_RA%>% select(-Col)%>%column_to_rownames(var="OTU")
+```
+
+
+```{r}
+#View(Rarefied_Table_rounded)
+my_fotu_table <-data.frame(t(input1))
+# Apply diversity functions to table
+fotus_div_stats<-data.frame(my_fotu_table[,0])
+fotus_div_stats$Richness<-apply(my_fotu_table,1,Species.richness)
+fotus_div_stats$`Shannon Index`<-apply(my_fotu_table,1,Shannon.entropy)
+fotus_div_stats$Sample=rownames(fotus_div_stats)
+fotus_div_stats2=fotus_div_stats%>%gather(., -Sample, key = "Metric", value="Value")
+fotus_div_stats2$Metric=factor(fotus_div_stats2$Metric, levels = c("Richness", "Shannon Index") )
+fotus_div_stats2$`N-Fertilization Intensity`=fotus_div_stats2$`N-Fertilization_Intensity`
+fotus_div_stats3=fotus_div_stats2%>%
+         full_join(metadata_assign, by="Sample")%>%
+         mutate(.,Treatment2=str_replace(Treatment2, "BM","BMc"))#%>%na.omit()
+
+new_with_letters=list()
+for(i in unique(paste0(fotus_div_stats3$Metric))){
+file1=filter(fotus_div_stats3, Metric==paste0(i)) 
+file1$G=paste0(file1$`N-Fertilization_Intensity`,"_",file1$Treatment2)
+dunns= dunn.test::dunn.test(file1$Value, file1$G, method = "BH")
+comparisons=data.frame(comparisons=dunns$comparisons, p=dunns$P.adjusted)%>%
+  separate(., "comparisons", into = c("row","col"), sep = " - ")
+orderlist= aggregate( file1, Value~G, max)
+
+comparisons=full_join(comparisons, orderlist%>%mutate(row=G), by="row")%>%na.omit()
+comparisons=comparisons[order(comparisons$Value, decreasing = T),]
+names1=paste0(comparisons$row,"-", comparisons$col)
+p=comparisons$p
+names(p)=names1
+letters=  multcompView::multcompLetters(p,  compare = "<", reversed =F)$Letters%>%as.data.frame()
+
+colnames(letters)="L1"
+letters$G=rownames(letters)
+file1=full_join(file1,letters)%>%full_join(select(orderlist, G, max=Value))
+new_with_letters=rbind(new_with_letters,file1)
+}
+
+
+
+alphaplots_fungi= ggplot(new_with_letters, 
+       aes(x=paste0( `N-Fertilization_Intensity`,"ensive"), y=Value, fill=Treatment2))+
+  geom_boxplot() + 
+  theme_pubr(border=T) + 
+  facet_wrap(~Metric, scales = "free_y", nrow = 1, strip.position = "left")+
+  theme(strip.placement = "outside")+
+  scale_fill_manual(name="",values=c( "#ff9900","#146eb4"))+
+  theme(strip.background = element_rect(colour="white", fill="white"))+
+  theme( axis.text.y = element_text( size=15, face = "bold", colour="black")) +
+  theme(axis.text.x = element_text(size = 15, face = "bold", colour="black", angle = 0)) +
+  theme(legend.text = element_text( size=25, face="bold", colour = "black")) + 
+  theme( axis.title.y = element_text( size=15, face = "bold", colour="black")) + 
+  theme(axis.title.x = element_text(size = 15, face = "bold", colour="black")) +
+  theme(legend.title =  element_text( size=25, face="bold", colour = "black")) +
+  guides(shape=guide_legend(override.aes = list(size=22), ncol=1)) + 
+  guides(size=guide_legend( ncol=1)) + #geom_errorbar(stat="summary",position = position_dodge2(width = 1))+
+  ylab("")+xlab("N-Fertilization_Intensity")+
+  theme(strip.text = element_text(size = 25, colour="black"))+
+geom_text(aes(y=max+Value*.05,label=L1), size=5, stat = "summary", position = position_dodge2(width = 0.75))
+
+
+plots=
+ggarrange(alphaplots_ASVs, alphaplots_fungi, nrow=2, labels =c("A)","B)"), common.legend = T, font.label = list(size=14) )
+
+ggsave(filename = "alphaplots.pdf", plots, height = 13, width = 10)
+
+shannon= ggplot(fotus_div_stats%>%
+                   full_join(metadata_assign, by="Sample")%>%na.omit()%>%mutate(., Type=str_replace(Type, "Rizosphere", "RH"))%>%
+                   mutate(Type=str_replace(Type, "Root.*", "RA"))%>%
+                   mutate(.,Treatment=str_replace(Treatment, "BMc","BMc")), 
+                 aes(x= `N-Fertilization_Intensity`, y=Shannon_Index, fill=Treatment))+
+  geom_boxplot() + 
+  theme_pubr(border=T) + 
+  #facet_wrap(~Type, scales = "free_y", nrow = 1)+
+  scale_fill_manual(name="",values=c( "#ff9900","#146eb4"))+
+  
+  theme( axis.text.y = element_text( size=15, face = "bold", colour="black")) +
+  theme(axis.text.x = element_text(size = 15, face = "bold", colour="black", angle = 0)) +
+  theme(legend.text = element_text( size=25, face="bold", colour = "black")) + 
+  theme( axis.title.y = element_text( size=15, face = "bold", colour="black")) + 
+  theme(axis.title.x = element_text(size = 15, face = "bold", colour="black")) +
+  theme(legend.title =  element_text( size=25, face="bold", colour = "black")) +
+  guides(shape=guide_legend(override.aes = list(size=22), ncol=1)) + 
+  guides(size=guide_legend( ncol=1)) + #geom_errorbar(stat="summary",position = position_dodge2(width = 1))+
+  ylab("Shannon Index")+xlab("N-Fertilization")+
+  theme(strip.text = element_text(size = 25, colour="black"))+
+  stat_compare_means(method = "wilcox.test", label = "p.signif", hide.ns = T)
+
+pielou= ggplot(fotus_div_stats%>%
+                 full_join(metadata_assign, by="Sample")%>%na.omit()%>%mutate(., Type=str_replace(Type, "Rizosphere", "RH"))%>%
+                 mutate(Type=str_replace(Type, "Root.*", "RA"))%>%
+                 mutate(.,Treatment=str_replace(Treatment, "BMc","BMc")), 
+               aes(x= `N-Fertilization_Intensity`, y=Evenness, fill=Treatment))+
+  geom_boxplot() + 
+  theme_pubr(border=T) + 
+  #facet_wrap(~Type, scales = "free_y", nrow = 1)+
+  scale_fill_manual(name="",values=c( "#ff9900","#146eb4"))+
+  
+  theme( axis.text.y = element_text( size=15, face = "bold", colour="black")) +
+  theme(axis.text.x = element_text(size = 15, face = "bold", colour="black", angle = 0)) +
+  theme(legend.text = element_text( size=25, face="bold", colour = "black")) + 
+  theme( axis.title.y = element_text( size=15, face = "bold", colour="black")) + 
+  theme(axis.title.x = element_text(size = 15, face = "bold", colour="black")) +
+  theme(legend.title =  element_text( size=25, face="bold", colour = "black")) +
+  guides(shape=guide_legend(override.aes = list(size=22), ncol=1)) + 
+  guides(size=guide_legend( ncol=1)) + #geom_errorbar(stat="summary",position = position_dodge2(width = 1))+
+  ylab("Pielou's Evenness")+xlab("N-Fertilization")+
+  theme(strip.text = element_text(size = 25, colour="black"))+
+  stat_compare_means(method = "wilcox.test", label = "p.signif", hide.ns = T)
+
+ggarrange(richness,shannon,pielou, labels = c("A)","B)","C)"), font.label = list(size=20), nrow = 1, common.legend = T)

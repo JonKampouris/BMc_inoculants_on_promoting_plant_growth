@@ -18,7 +18,7 @@ library(ggpubr)
 # install.packages("MuMIn")
 
 
-df.dc.RW.root<-read.table("Root_traits_LTE1_2020_RW_sorted_biomass.txt",h=T)
+df.dc.RW.root<-read.table("~/Root_traits_LTE1_2020_RW_sorted_biomass.txt",h=T)
 df.dc.RW.root
 
 str(df.dc.RW.root)
