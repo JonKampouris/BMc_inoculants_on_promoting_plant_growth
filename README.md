@@ -1,1 +1,1 @@
-In this study we inoculated plants with a consortium of plant beneficial bacteria in Bernburg, in the year 2020.
+The present study analyzes the effects of a consortium of beneficial microbes (BMc) (Pseudomonas sp. RU47, Bacillus atrophaeus ABi03, Trichoderma harzianum OMG16) on maize (Zea mays cv. Benedictio) through an inoculation experiment conducted within a long-term field trial across intensive and extensive farming practices.
