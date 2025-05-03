@@ -1,0 +1,497 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={cherryonthetop.rmd},
+  pdfauthor={Ioannis D. Kampouris},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{cherryonthetop.rmd}
+\author{Ioannis D. Kampouris}
+\date{2023-05-13}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{source}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/functions\_load.R"}\NormalTok{))}
+\FunctionTok{library}\NormalTok{(ggnetwork)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: ggplot2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2) }\CommentTok{\#ggplot2: Fancy graphs}
+\FunctionTok{library}\NormalTok{(ggpubr) }\CommentTok{\#ggplot expansion for more fancy graphs}
+\FunctionTok{library}\NormalTok{(readxl) }\CommentTok{\# upload files  }
+\FunctionTok{library}\NormalTok{(readr) }\CommentTok{\# read the files}
+\FunctionTok{library}\NormalTok{(tidyr) }\CommentTok{\# Data handling}
+\FunctionTok{library}\NormalTok{(RColorBrewer) }\CommentTok{\# Colours for fancy graphs}
+\FunctionTok{library}\NormalTok{(tibble)}\CommentTok{\# Data handling: rownames/columnanmes}
+\FunctionTok{library}\NormalTok{(stringr) }\CommentTok{\# Manipulate strings}
+\FunctionTok{library}\NormalTok{(igraph)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'igraph'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tibble':
+## 
+##     as_data_frame
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tidyr':
+## 
+##     crossing
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     decompose, spectrum
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggraph)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:igraph':
+## 
+##     as_data_frame, groups, union
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(reshape2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'reshape2'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tidyr':
+## 
+##     smiths
+\end{verbatim}
+
+The following scripts aims to correlate differentially abundant
+ASVs/OTUs/Metagenomic-reads with plant functions, nutrients and genes.
+
+To analyse this data I will use pearson correlations and all the diff.
+abundant values
+
+Files provided by the rest of the researchers in the consortium:
+
+LTE2020\_geneExpression\_deltaCT.xlsx
+CountMatrix\_CT2020\_read-based\_BMvsC\_Ext\_responder.xlsx
+LTE2020\_growth\_statistics.xlsx
+CountMatrix\_CT2020\_read-based\_BMvsC\_Int\_responder.xlsx
+LTE2020\_plant\_nutrient\_content.xlsx
+CT2020\_RH.Ext\_CtrlvsExt\_BM\_summary\_final\_OTU.txt
+Metabolites\_LTE1\_2020\_RW\_sorted.xlsx
+CT2020\_RH.Int\_CtrlvsInt\_BM\_summary\_final\_OTU.txt
+Root\_traits\_LTE1\_2020\_RW\_sorted.xlsx
+Hormones\_and\_Stress\_Ind\_Central\_and\_RW.xlsx
+Signficantly\_diff\_ASVs\_16S.csv
+
+\emph{LOAD THE DATA}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{deltacts}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/LTE2020\_geneExpression\_deltaCT.xlsx"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(., }\AttributeTok{ID=}\NormalTok{TREATMENT, }\FunctionTok{everything}\NormalTok{())}
+\NormalTok{Growth\_stats}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/LTE2020\_growth\_statistics.xlsx"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{select}\NormalTok{(ID, VALUE)}
+\NormalTok{np\_content}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/LTE2020\_plant\_nutrient\_content.xlsx"}\NormalTok{))}
+\NormalTok{count\_matrix\_MG1}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/"}\NormalTok{,}
+\StringTok{"CountMatrix\_CT2020\_read{-}based\_BMvsC\_Ext\_responder.xlsx"}\NormalTok{),}\AttributeTok{sheet =} \StringTok{"Rel abund"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{column\_to\_rownames}\NormalTok{(}\AttributeTok{var=}\StringTok{"GeneID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{apply}\NormalTok{(., }\DecValTok{2}\NormalTok{, log\_ratio)}
+\FunctionTok{colnames}\NormalTok{(count\_matrix\_MG1)}\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\StringTok{"CT{-}Ext{-}C{-}1"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}2"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}3"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}4"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}1"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}2"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}3"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}4"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}1"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}2"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}3"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}4"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}1"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}2"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}3"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}4"}\NormalTok{)}
+
+
+\NormalTok{count\_matrix\_MG2}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/"}\NormalTok{,}
+\StringTok{"CountMatrix\_CT2020\_read{-}based\_BMvsC\_Int\_responder.xlsx"}\NormalTok{),}\AttributeTok{sheet =} \StringTok{"Rel abund"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{column\_to\_rownames}\NormalTok{(}\AttributeTok{var=}\StringTok{"GeneID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{apply}\NormalTok{(., }\DecValTok{2}\NormalTok{, log\_ratio)}
+
+\FunctionTok{colnames}\NormalTok{(count\_matrix\_MG2)}\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\StringTok{"CT{-}Ext{-}C{-}1"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}2"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}3"}\NormalTok{, }\StringTok{"CT{-}Ext{-}C{-}4"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}1"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}2"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}3"}\NormalTok{, }\StringTok{"CT{-}Int{-}C{-}4"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}1"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}2"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}3"}\NormalTok{, }\StringTok{"CT{-}Ext{-}I{-}4"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}1"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}2"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}3"}\NormalTok{, }\StringTok{"CT{-}Int{-}I{-}4"}\NormalTok{)}
+
+
+
+\NormalTok{fungi1}\OtherTok{=} \FunctionTok{read.table}\NormalTok{(}\AttributeTok{file=}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/"}\NormalTok{,}
+\StringTok{"CT2020\_RH.Ext\_CtrlvsExt\_BM\_summary\_final\_OTU.txt"}\NormalTok{), }\AttributeTok{sep=}\StringTok{"}\SpecialCharTok{\textbackslash{}t}\StringTok{"}\NormalTok{) }
+\NormalTok{fungi1a}\OtherTok{=}\NormalTok{fungi1[,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{9}\NormalTok{]}
+\NormalTok{fungi2}\OtherTok{=} \FunctionTok{read.table}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/"}\NormalTok{,}
+\StringTok{"CT2020\_RH.Int\_CtrlvsInt\_BM\_summary\_final\_OTU.txt"}\NormalTok{), }\AttributeTok{sep=}\StringTok{"}\SpecialCharTok{\textbackslash{}t}\StringTok{"}\NormalTok{)}
+\NormalTok{fungi2a}\OtherTok{=}\NormalTok{fungi2[,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{9}\NormalTok{]}
+
+\NormalTok{fungi\_combined}\OtherTok{=}\FunctionTok{full\_join}\NormalTok{(}\FunctionTok{gather}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{( fungi1a), }\SpecialCharTok{{-}}\NormalTok{Row.names, }\AttributeTok{value =} \StringTok{"RA"}\NormalTok{,}\AttributeTok{key =} \StringTok{"ID"}\NormalTok{),}
+                         \FunctionTok{gather}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{( fungi2a), }\SpecialCharTok{{-}}\NormalTok{Row.names, }\AttributeTok{value =} \StringTok{"RA"}\NormalTok{,}\AttributeTok{key =} \StringTok{"ID"}\NormalTok{), }\AttributeTok{by=}\FunctionTok{c}\NormalTok{(}\StringTok{"Row.names"}\NormalTok{, }\StringTok{"ID"}\NormalTok{,}\StringTok{"RA"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{dcast}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{Row.names}\StringTok{\textasciigrave{}}\SpecialCharTok{\textasciitilde{}}\NormalTok{ID, }\AttributeTok{value.var =} \StringTok{"RA"}\NormalTok{, mean)}
+ 
+
+\NormalTok{get\_fungal\_otus}\OtherTok{=}\NormalTok{fungi\_combined}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace\_all}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{Row.names}\StringTok{\textasciigrave{}}\NormalTok{, }\StringTok{"FU.*"}\NormalTok{, }\StringTok{"FU"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{as.data.frame}\NormalTok{()}
+
+\NormalTok{fungi\_RA}\OtherTok{=} 
+  \FunctionTok{read.table}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/"}\NormalTok{,}
+\StringTok{"otu\_RH.fungi.Ioannis.txt"}\NormalTok{), }\AttributeTok{sep=}\StringTok{" "}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{t}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as.data.frame}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"RH\_"}\NormalTok{, }\StringTok{""}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"Ctrl"}\NormalTok{, }\StringTok{"C{-}"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"BM"}\NormalTok{, }\StringTok{"I{-}"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace\_all}\NormalTok{(ID, }\StringTok{"\_"}\NormalTok{, }\StringTok{"{-}"}\NormalTok{))}
+
+\NormalTok{fungi\_RA[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(fungi\_RA)]}\OtherTok{=} 
+  \FunctionTok{apply}\NormalTok{( }\FunctionTok{normalise\_100}\NormalTok{(fungi\_RA[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(fungi\_RA)])  ,}\DecValTok{2}\NormalTok{,log\_ratio)}
+
+\NormalTok{significant\_ASVs}\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/Signficantly\_diff\_ASVs\_16S.csv"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{gather}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{X, }\AttributeTok{key=}\StringTok{"ID"}\NormalTok{, }\AttributeTok{value =} \StringTok{"RA\_16S"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{ID=}\FunctionTok{str\_replace\_all}\NormalTok{(ID, }\StringTok{"[.]"}\NormalTok{, }\StringTok{"{-}"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{mutate}\NormalTok{(  }\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"{-}raw"}\NormalTok{, }\StringTok{""}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{mutate}\NormalTok{(  }\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"RH{-}"}\NormalTok{, }\StringTok{""}\NormalTok{)  )}\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{mutate}\NormalTok{(  }\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"{-}C"}\NormalTok{, }\StringTok{"{-}C{-}"}\NormalTok{)  )}\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{mutate}\NormalTok{(  }\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"t{-}I"}\NormalTok{, }\StringTok{"t{-}I{-}"}\NormalTok{)  )}
+  
+
+\NormalTok{HSI\_RW}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/Hormones\_and\_Stress\_Ind\_Central\_and\_RW.xlsx"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{paste0}\NormalTok{(TILLAGE\_TYPE,}\StringTok{"{-}"}\NormalTok{,FERTILIZATION,}\StringTok{"{-}"}\NormalTok{,Bms,}\StringTok{"{-}"}\NormalTok{,REPLICATE ))}
+\NormalTok{HSI\_RW2}\OtherTok{=}\NormalTok{HSI\_RW[,}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(HSI\_RW))]}
+
+
+\NormalTok{root\_traits}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/Root\_traits\_LTE1\_2020\_RW\_sorted.xlsx"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{FERTILIZATION=}\FunctionTok{str\_replace}\NormalTok{(FERTILIZATION, }\StringTok{"ensive"}\NormalTok{,}\StringTok{""}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{paste0}\NormalTok{(TILLAGE\_TYPE,}\StringTok{"{-}"}\NormalTok{,FERTILIZATION,}\StringTok{"{-}"}\NormalTok{,Bms,}\StringTok{"{-}"}\NormalTok{,REPLICATE ))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"BMc"}\NormalTok{,}\StringTok{"I"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"Ctrl"}\NormalTok{,}\StringTok{"C"}\NormalTok{))}
+\NormalTok{root\_traits2}\OtherTok{=}\NormalTok{root\_traits[,}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(root\_traits))]}
+
+\NormalTok{metabolites}\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"/home/ioannis.kampouris/"}\NormalTok{,}
+\StringTok{"DiControl\_JKI\_Phase3\_repos/"}\NormalTok{,}
+\StringTok{"MS3\_correlation\_network/Metabolites\_LTE1\_2020\_RW\_sorted.xlsx"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{FERTILIZATION=}\FunctionTok{str\_replace}\NormalTok{(FERTILIZATION, }\StringTok{"ensive"}\NormalTok{,}\StringTok{""}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{paste0}\NormalTok{(TILLAGE\_TYPE,}\StringTok{"{-}"}\NormalTok{,FERTILIZATION,}\StringTok{"{-}"}\NormalTok{,Bms,}\StringTok{"{-}"}\NormalTok{,REPLICATE ))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"BMc"}\NormalTok{,}\StringTok{"I"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ID=}\FunctionTok{str\_replace}\NormalTok{(ID, }\StringTok{"Ctrl"}\NormalTok{,}\StringTok{"C"}\NormalTok{))}
+\NormalTok{metabolites2}\OtherTok{=}\NormalTok{metabolites[,}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(metabolites))]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{significant\_ASVs\_loggm}\OtherTok{=}\NormalTok{ significant\_ASVs}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{dcast}\NormalTok{(ID}\SpecialCharTok{\textasciitilde{}}\NormalTok{X, }
+\AttributeTok{value.var =} \StringTok{"RA\_16S"}\NormalTok{, mean)}
+\NormalTok{significant\_ASVs\_loggm[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(significant\_ASVs\_loggm)]}\OtherTok{=}
+  \FunctionTok{apply}\NormalTok{(significant\_ASVs\_loggm[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(significant\_ASVs\_loggm)],}\DecValTok{2}\NormalTok{,}
+\NormalTok{        log\_ratio) }
+\NormalTok{selected\_fungal\_samples}\OtherTok{=}\NormalTok{ fungi\_RA}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{select}\NormalTok{(}\StringTok{"ID"}\NormalTok{, }\FunctionTok{unique}\NormalTok{(get\_fungal\_otus}\SpecialCharTok{$}\NormalTok{ID))}
+\NormalTok{combined\_count}\OtherTok{=}\FunctionTok{rbind}\NormalTok{(count\_matrix\_MG1, count\_matrix\_MG2)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{t}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as.matrix}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{as.data.frame}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rownames\_to\_column}\NormalTok{(}\AttributeTok{var=}\StringTok{"ID"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: The `.data` argument of `add_column()` must have unique names as of tibble
+## 3.0.0.
+## i Use `.name_repair = "minimal"`.
+## i The deprecated feature was likely used in the tibble package.
+##   Please report the issue at <]8;;https://github.com/tidyverse/tibble/issueshttps://github.com/tidyverse/tibble/issues]8;;>.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{joined}\OtherTok{=}\FunctionTok{full\_join}\NormalTok{(np\_content,significant\_ASVs\_loggm,}
+                 \AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{full\_join}\NormalTok{(Growth\_stats, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(deltacts, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., combined\_count, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., fungi\_RA}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{select}\NormalTok{(}\StringTok{"ID"}\NormalTok{, }\FunctionTok{unique}\NormalTok{(get\_fungal\_otus}\SpecialCharTok{$}\NormalTok{ID)), }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}
+
+
+
+
+\NormalTok{correlations}\OtherTok{=}\NormalTok{Hmisc}\SpecialCharTok{::}\FunctionTok{rcorr}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{( joined[,}\DecValTok{11}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(joined)]), }\AttributeTok{type =} \StringTok{"pearson"}\NormalTok{)}
+\NormalTok{flat\_cor}\OtherTok{=} \FunctionTok{flattenCorrMatrix}\NormalTok{(correlations}\SpecialCharTok{$}\NormalTok{r, correlations}\SpecialCharTok{$}\NormalTok{P)}
+\NormalTok{flat\_cor}\SpecialCharTok{$}\NormalTok{padj}\OtherTok{=}\FunctionTok{p.adjust}\NormalTok{(flat\_cor}\SpecialCharTok{$}\NormalTok{p, }\AttributeTok{method =} \StringTok{"BH"}\NormalTok{)}
+\NormalTok{flat\_cor}\OtherTok{=}\FunctionTok{filter}\NormalTok{(flat\_cor,padj}\SpecialCharTok{\textless{}}\FloatTok{0.05}\SpecialCharTok{\&}\FunctionTok{abs}\NormalTok{(cor)}\SpecialCharTok{\textgreater{}=}\FloatTok{0.7}
+\NormalTok{                )}
+\NormalTok{flat\_cor}\SpecialCharTok{$}\NormalTok{Correlation}\OtherTok{=}\NormalTok{flat\_cor}\SpecialCharTok{$}\NormalTok{cor}
+\NormalTok{flat\_cor}\SpecialCharTok{$}\NormalTok{Correlation[flat\_cor}\SpecialCharTok{$}\NormalTok{Correlation}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{]}\OtherTok{\textless{}{-}}\StringTok{"Positive"}
+\NormalTok{flat\_cor}\SpecialCharTok{$}\NormalTok{Correlation[flat\_cor}\SpecialCharTok{$}\NormalTok{Correlation}\SpecialCharTok{\textless{}}\DecValTok{0}\NormalTok{]}\OtherTok{\textless{}{-}}\StringTok{"Negative"}
+
+\NormalTok{ g}\OtherTok{=}\FunctionTok{graph\_from\_data\_frame}\NormalTok{(flat\_cor, }\AttributeTok{directed =}\NormalTok{ F)}
+ \FunctionTok{E}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{weight}\OtherTok{=} \DecValTok{1}\SpecialCharTok{+}\NormalTok{(   ((flat\_cor}\SpecialCharTok{$}\NormalTok{cor)))}
+ 
+\NormalTok{network\_metadata}\OtherTok{=} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\FunctionTok{unique}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(significant\_ASVs\_loggm[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(significant\_ASVs\_loggm)])), }\AttributeTok{info=}\StringTok{"Bacterial\_Taxa"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\FunctionTok{c}\NormalTok{(get\_fungal\_otus}\SpecialCharTok{$}\NormalTok{ID), }\AttributeTok{info=}\StringTok{"Fungal\_Taxa"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\StringTok{"VALUE"}\NormalTok{, }\AttributeTok{info=}\StringTok{"Plant{-}Growth"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{combined\_count[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(combined\_count)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(),}
+\AttributeTok{info=}\StringTok{"Functional Genes (Metagenome)"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{deltacts[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(deltacts)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Plant Genes (Expression levels)"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{np\_content[,}\DecValTok{11}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(np\_content)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Nutrients"}\NormalTok{))}
+
+
+ 
+
+\NormalTok{l}\OtherTok{=}\FunctionTok{layout\_with\_drl}\NormalTok{(g, }\AttributeTok{weights =} \FunctionTok{E}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{weight}\SpecialCharTok{/}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{6}\NormalTok{)}
+\NormalTok{network\_table}\OtherTok{=} \FunctionTok{ggnetwork}\NormalTok{(g, }\AttributeTok{layout=}\NormalTok{l)}
+
+\NormalTok{complete\_network1}\OtherTok{=} \FunctionTok{full\_join}\NormalTok{(network\_metadata,network\_table, }\AttributeTok{by=}\StringTok{"name"}\NormalTok{)}\CommentTok{\#\%\textgreater{}\%filter(Correlation!="NA")}
+\NormalTok{netwkork\_graph1}\OtherTok{=}\NormalTok{ complete\_network1}\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{( }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{xend =}\NormalTok{ xend, }\AttributeTok{yend =}\NormalTok{ yend))}\SpecialCharTok{+} \FunctionTok{geom\_edges}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linetype=}\NormalTok{Correlation), }\AttributeTok{colour=}\StringTok{"skyblue4"}\NormalTok{,}\AttributeTok{curvature=}\FloatTok{0.4}\NormalTok{,  }\AttributeTok{alpha=}\FloatTok{0.2}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{geom\_nodes}\NormalTok{(}\AttributeTok{size=}\DecValTok{3}\NormalTok{, }\AttributeTok{pch=}\DecValTok{21}\NormalTok{,}
+ \FunctionTok{aes}\NormalTok{(}\AttributeTok{fill=}\NormalTok{info),}
+\AttributeTok{colour=}\StringTok{"black"}
+\NormalTok{)}\SpecialCharTok{+}
+\FunctionTok{theme\_void}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set1"}\NormalTok{, }\AttributeTok{name=}\StringTok{""}\NormalTok{)}
+\NormalTok{netwkork\_graph1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 4 rows containing missing values (`geom_point()`).
+\end{verbatim}
+
+\includegraphics{cherryonthetop_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(netwkork\_graph1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 4 rows containing missing values (`geom_point()`).
+\end{verbatim}
+
+\includegraphics{cherryonthetop_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{joined\_with\_RW\_data}\OtherTok{=}\FunctionTok{full\_join}\NormalTok{(np\_content,significant\_ASVs\_loggm,}
+                 \AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{full\_join}\NormalTok{(Growth\_stats, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(deltacts, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., combined\_count, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., fungi\_RA}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{select}\NormalTok{(}\StringTok{"ID"}\NormalTok{, }\FunctionTok{unique}\NormalTok{(get\_fungal\_otus}\SpecialCharTok{$}\NormalTok{ID)), }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., HSI\_RW2, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., root\_traits2, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(., metabolites2, }\AttributeTok{by=}\StringTok{"ID"}\NormalTok{)}
+
+\NormalTok{correlations\_with\_RW}\OtherTok{=}\NormalTok{Hmisc}\SpecialCharTok{::}\FunctionTok{rcorr}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(}
+\NormalTok{joined\_with\_RW\_data[,}\DecValTok{11}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(joined\_with\_RW\_data)]),}
+\AttributeTok{type =} \StringTok{"pearson"}\NormalTok{)}
+\NormalTok{flat\_cor\_RW}\OtherTok{=} \FunctionTok{flattenCorrMatrix}\NormalTok{(correlations\_with\_RW}\SpecialCharTok{$}\NormalTok{r, correlations\_with\_RW}\SpecialCharTok{$}\NormalTok{P)}
+\NormalTok{flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{padj}\OtherTok{=}\FunctionTok{p.adjust}\NormalTok{(flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{p, }\AttributeTok{method =} \StringTok{"BH"}\NormalTok{)}
+\NormalTok{flat\_cor\_RW}\OtherTok{=}\FunctionTok{filter}\NormalTok{(flat\_cor\_RW,padj}\SpecialCharTok{\textless{}}\FloatTok{0.05}\SpecialCharTok{\&}\FunctionTok{abs}\NormalTok{(cor)}\SpecialCharTok{\textgreater{}=}\FloatTok{0.7}
+\NormalTok{                )}
+\NormalTok{flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{Correlation}\OtherTok{=}\NormalTok{flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{cor}
+\NormalTok{flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{Correlation[flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{Correlation}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{]}\OtherTok{\textless{}{-}}\StringTok{"Positive"}
+\NormalTok{flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{Correlation[flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{Correlation}\SpecialCharTok{\textless{}}\DecValTok{0}\NormalTok{]}\OtherTok{\textless{}{-}}\StringTok{"Negative"}
+
+\NormalTok{ g\_RW}\OtherTok{=}\FunctionTok{graph\_from\_data\_frame}\NormalTok{(flat\_cor\_RW, }\AttributeTok{directed =}\NormalTok{ F)}
+ \FunctionTok{E}\NormalTok{(g\_RW)}\SpecialCharTok{$}\NormalTok{weight}\OtherTok{=} \DecValTok{1}\SpecialCharTok{+}\NormalTok{(   ((flat\_cor\_RW}\SpecialCharTok{$}\NormalTok{cor)))}
+ 
+\NormalTok{network\_metadata\_RW}\OtherTok{=} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\FunctionTok{unique}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(significant\_ASVs\_loggm[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(significant\_ASVs\_loggm)])), }\AttributeTok{info=}\StringTok{"Bacterial\_Taxa"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\FunctionTok{c}\NormalTok{(get\_fungal\_otus}\SpecialCharTok{$}\NormalTok{ID), }\AttributeTok{info=}\StringTok{"Fungal\_Taxa"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\StringTok{"VALUE"}\NormalTok{, }\AttributeTok{info=}\StringTok{"Plant{-}Growth"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{combined\_count[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(combined\_count)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(),}
+\AttributeTok{info=}\StringTok{"Functional Genes (Metagenome)"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{deltacts[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(deltacts)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Plant Genes (Expression levels)"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{np\_content[,}\DecValTok{11}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(np\_content)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Nutrients"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{root\_traits2[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(root\_traits2 )]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Root{-}Traits"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{metabolites2[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(metabolites2)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Metabolites"}\NormalTok{),}
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name=}\NormalTok{HSI\_RW2[,}\DecValTok{2}\SpecialCharTok{:}\FunctionTok{ncol}\NormalTok{(HSI\_RW2)]}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{colnames}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}\FunctionTok{unique}\NormalTok{(), }\AttributeTok{info=}\StringTok{"Hormones/Stress{-}Factors"}\NormalTok{)}
+\NormalTok{)}
+
+
+ 
+
+\NormalTok{l\_RW}\OtherTok{=}\FunctionTok{layout\_with\_drl}\NormalTok{(g\_RW, }\AttributeTok{weights =} \FunctionTok{E}\NormalTok{(g\_RW)}\SpecialCharTok{$}\NormalTok{weight}\SpecialCharTok{/}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{6}\NormalTok{)}
+\NormalTok{network\_table\_RW}\OtherTok{=} \FunctionTok{ggnetwork}\NormalTok{(g\_RW, }\AttributeTok{layout=}\NormalTok{l\_RW)}
+
+\NormalTok{complete\_networkRW}\OtherTok{=} \FunctionTok{full\_join}\NormalTok{(network\_metadata\_RW,network\_table\_RW, }\AttributeTok{by=}\StringTok{"name"}\NormalTok{)}\CommentTok{\#\%\textgreater{}\%filter(Correlation!="NA")}
+\NormalTok{netwkork\_graphRW}\OtherTok{=}\NormalTok{ complete\_networkRW}\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ggplot}\NormalTok{( }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{xend =}\NormalTok{ xend, }\AttributeTok{yend =}\NormalTok{ yend))}\SpecialCharTok{+} \FunctionTok{geom\_edges}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linetype=}\NormalTok{Correlation), }\AttributeTok{colour=}\StringTok{"skyblue4"}\NormalTok{,}\AttributeTok{curvature=}\FloatTok{0.4}\NormalTok{,  }\AttributeTok{alpha=}\FloatTok{0.2}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{geom\_nodes}\NormalTok{(}\AttributeTok{size=}\DecValTok{3}\NormalTok{, }\AttributeTok{pch=}\DecValTok{21}\NormalTok{,}
+ \FunctionTok{aes}\NormalTok{(}\AttributeTok{fill=}\NormalTok{info),}
+\AttributeTok{colour=}\StringTok{"black"}
+\NormalTok{)}\SpecialCharTok{+}
+\FunctionTok{theme\_void}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set1"}\NormalTok{, }\AttributeTok{name=}\StringTok{""}\NormalTok{)}
+\NormalTok{netwkork\_graphRW}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 6 rows containing missing values (`geom_point()`).
+\end{verbatim}
+
+\includegraphics{cherryonthetop_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(netwkork\_graphRW)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 6 rows containing missing values (`geom_point()`).
+\end{verbatim}
+
+\includegraphics{cherryonthetop_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\end{document}

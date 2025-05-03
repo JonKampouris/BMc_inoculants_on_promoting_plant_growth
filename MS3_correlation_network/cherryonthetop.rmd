@@ -1,0 +1,410 @@
+---
+title: "cherryonthetop.rmd"
+author: "Ioannis D. Kampouris"
+date: "2023-05-13"
+output: pdf_document
+pandoc_args: --listings
+includes:
+in_header: preamble.tex
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+source(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/functions_load.R"))
+library(ggnetwork)
+library(ggplot2) #ggplot2: Fancy graphs
+library(ggpubr) #ggplot expansion for more fancy graphs
+library(readxl) # upload files  
+library(readr) # read the files
+library(tidyr) # Data handling
+library(RColorBrewer) # Colours for fancy graphs
+library(tibble)# Data handling: rownames/columnanmes
+library(stringr) # Manipulate strings
+library(igraph)
+library(dplyr)
+library(reshape2)
+set.seed(0112022)
+```
+
+The following scripts aims to correlate differential abundant ASVs/OTUs/Metagenomic-reads
+with plant functions, nutrients and genes.
+
+To analyse this data I will use pearson correlations and all 
+the diff. abundant values
+
+Files provided by the rest of the researchers in the consortium:
+
+LTE2020_geneExpression_deltaCT.xlsx
+CountMatrix_CT2020_read-based_BMvsC_Ext_responder.xlsx  LTE2020_growth_statistics.xlsx
+CountMatrix_CT2020_read-based_BMvsC_Int_responder.xlsx  LTE2020_plant_nutrient_content.xlsx
+CT2020_RH.Ext_CtrlvsExt_BM_summary_final_OTU.txt        Metabolites_LTE1_2020_RW_sorted.xlsx
+CT2020_RH.Int_CtrlvsInt_BM_summary_final_OTU.txt        Root_traits_LTE1_2020_RW_sorted.xlsx
+Hormones_and_Stress_Ind_Central_and_RW.xlsx             Signficantly_diff_ASVs_16S.csv
+
+
+*LOAD THE DATA*
+```{r}
+deltacts= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/LTE2020_geneExpression_deltaCT.xlsx"))%>% 
+  select(., ID=TREATMENT, everything())
+Growth_stats= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/LTE2020_growth_statistics.xlsx"))%>%select(ID, VALUE)
+np_content= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/LTE2020_plant_nutrient_content.xlsx"))
+count_matrix_MG1= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/",
+"CountMatrix_CT2020_read-based_BMvsC_Ext_responder.xlsx"),sheet = "Rel abund")%>%
+  column_to_rownames(var="GeneID")
+colnames(count_matrix_MG1)<-c("CT-Ext-C-1", "CT-Ext-C-2", "CT-Ext-C-3",
+"CT-Ext-C-4", "CT-Int-C-1", "CT-Int-C-2", "CT-Int-C-3", "CT-Int-C-4",
+"CT-Ext-I-1", "CT-Ext-I-2", "CT-Ext-I-3",
+"CT-Ext-I-4", "CT-Int-I-1", "CT-Int-I-2", "CT-Int-I-3", "CT-Int-I-4")
+
+
+count_matrix_MG2= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/",
+"CountMatrix_CT2020_read-based_BMvsC_Int_responder.xlsx"),sheet = "Rel abund")%>%
+  column_to_rownames(var="GeneID")
+
+
+colnames(count_matrix_MG2)<-c("CT-Ext-C-1", "CT-Ext-C-2", "CT-Ext-C-3", "CT-Ext-C-4", "CT-Int-C-1", "CT-Int-C-2", "CT-Int-C-3", "CT-Int-C-4", "CT-Ext-I-1", "CT-Ext-I-2", "CT-Ext-I-3", "CT-Ext-I-4", "CT-Int-I-1", "CT-Int-I-2", "CT-Int-I-3", "CT-Int-I-4")
+ 
+combined_count=
+full_join(
+count_matrix_MG2  %>%rownames_to_column(var="Gene")%>%
+  gather(-Gene, key="ID", value = "RA"),
+count_matrix_MG1 %>%rownames_to_column(var="Gene")%>%
+  gather(-Gene, key="ID", value = "RA"), by=c("ID","Gene","RA"))%>%
+dcast( ID~Gene,value.var = "RA",mean, fill = 0)
+
+combined_count[,2:ncol(combined_count)] =apply(combined_count[,2:ncol(combined_count)], 2, log_ratio)
+
+ASV_tax_table <- read.csv(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/",
+   "Signficantly_diff_ASVs_taxonomy.csv"))
+   
+```
+Parse taxonomy into ASVs, with class phyla and last taxonomic level (e.g. 
+class or family).
+```{r}
+ASVtable_working <- read.csv("plastid_clean_low_read_clean_contaminant_free_ASV_Table_LTE_2020.csv", row.names = 1)
+#Function to calculate median and prevalence, so we avoid the 
+# confirmed DNA extraction kit contaminants such as Ralstonia pickettii
+
+#Load the Taxonomy Table of the Rarefied ASV table. 
+nrow(ASVtable_working%>%
+       filter(., str_detect(Kingdom, "Archaea")))
+#No Archaea 
+ASVtax_table <- ASVtable_working[,2:9] %>%as.data.frame()
+ASVtax_table <- ASVtax_table %>% mutate(Taxonomy=paste0(Kingdom,";",Phylum,";",Class,";",Order,";",Family,";",Genus))%>%
+  mutate(Taxonomy =gsub("[[:space:]]", "_", Taxonomy))%>%
+  mutate(Taxonomy=str_replace_all(Taxonomy, ".ncultured.*.", "Unclassified"))%>%
+  mutate(Taxonomy=str_replace_all(Taxonomy, "uncultured*", "Unclassified"))%>%
+  mutate(Taxonomy=str_replace(Taxonomy, "metagenome", "Unclassified"))
+
+ASVtax_table <- dplyr::select(ASVtax_table,ASV,Sequence ,Taxonomy)%>%separate(Taxonomy,
+                                                                              into = c("Kingdom","Phylum","Class","Order","Family","Genus"), sep=";")
+ASVtax_table[ASVtax_table=="NA"]="Unclassified"
+ASVtax_table[ASVtax_table=="uncultured"]<-"Unclassified"
+ASVtax_table[ASVtax_table=="metagenome"]<-"Unclassified"
+rownames(ASVtax_table)=ASVtax_table$ASV
+gathered_ASV_table=gather(ASVtable_working[c(1,3:114)], -ASV, key = "Sample", value = "Abundance")
+
+#Assign metadata via sample names
+metadata_assign=data.frame(Sample=unique(gathered_ASV_table$Sample))%>%
+  mutate(Category=Sample)%>%
+  mutate(Category=str_replace(Category, "FSRW", "Field-Soil/Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "RHRW", "Rhizosphere/Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "RW", "Root-Window;"))%>%
+  mutate(Category=str_replace(Category, "FS", "Field-Soil;"))%>%
+  mutate(Category=str_replace(Category, "RH", "Rhizosphere;"))%>%
+  mutate(Category=str_replace(Category, ".T0", "T0-Soil;"))%>%
+  mutate(., Category=str_replace(Category, ".raw", ""))%>%
+  separate(., Category, into = c("Type", "Rest"), sep=";")%>%
+  mutate(., Rest=str_replace(Rest, ".CT.Ext.C", "CT;Extensive;Ctrl;"))%>%
+  mutate(., Rest=str_replace(Rest, ".CT.Ext.I", "CT;Extensive;BMc;"))%>%
+  mutate(., Rest=str_replace(Rest, ".CTEx.I", "CT;Extensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTEx.C", "CT;Extensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.I", "CT;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.I", "CT;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTIn.C", "CT;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CT.Int.C", "CT;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CT.Int.I", "CT;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CTEx.C", "CT;Extensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".CT.Int.I", "CT;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, "CTExtT0-Soil.", "CT;Extensive;T0-Soil;")) %>%
+  mutate(., Rest=str_replace(Rest, "CTIntT0-Soil.", "CT;Intensive;T0-Soil;")) %>%
+  mutate(., Rest=str_replace(Rest, "MPExtT0-Soil.", "MP;Extensive;T0-Soil;")) %>%
+  mutate(., Rest=str_replace(Rest, "MPIntT0-Soil.", "MP;Intensive;T0-Soil;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MP.Ext.C", "MP;Extensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MP.Ext.I", "MP;Extensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPEx.I", "MP'Extensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPEx.C1", "MP;Extensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.I", "MP;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.I", "MP;Intensive;BMc;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MPIn.C", "MP;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MP.Int.C", "MP;Intensive;Ctrl;")) %>%
+  mutate(., Rest=str_replace(Rest, ".MP.Int.I", "MP;Intensive;BMc;")) %>%
+  separate(., Rest, into=(c("Practice1", "N-Fertilization_Intensity", "Treatment", "Block")), sep = ";")%>% 
+  filter(., Practice1=="CT")
+
+metadata_assign$Treatment=factor(metadata_assign$Treatment, c("Ctrl","BMc"))
+FS_RS_metada=filter(metadata_assign, Type=="Field-Soil"|Type=="Rhizosphere"&Sample!="FS.CT.Ext.C4..2020.trimmed")
+ASVtable=dplyr::select(ASVtable_working, ASV, c(FS_RS_metada$Sample))%>%na.omit()%>%column_to_rownames(var="ASV")
+FS_metada=filter(metadata_assign, Type=="Field-Soil"&Sample!="FS.CT.Ext.C4..2020.trimmed")
+ASVtable=dplyr::select(ASVtable_working, ASV, c(FS_RS_metada$Sample))%>%na.omit()%>%column_to_rownames(var="ASV")
+#Exclude ASVs with less than five reads
+ASVs=ASVtable%>%dplyr::select(., -`FS.CT.Ext.C4..2020.trimmed`)
+#Relative abundance transformation
+ASV_100=apply(ASVs, 2, function (x)(x/sum(x))*100)
+metadata_assign$Treatment2 = as.numeric(metadata_assign$Treatment)-1
+#Differential Abundance##################
+#First Analysis of Rhizosphere samples
+RS_metadata=filter(metadata_assign, Type=="Rhizosphere")
+ASV_RH=ASV_100[,RS_metadata$Sample]
+```
+```{r, echo=F}
+# ASV Taxonomy. Convert genus to the last possible taxonomical-identified level.
+ASV_taxonomy= ASV_tax_table 
+ASV_taxonomy$Acronym=paste0(ASV_taxonomy$ASV,"_",ASV_taxonomy$Phylum, "_",
+ASV_taxonomy$Class,"_", ASV_taxonomy$Genus)
+
+
+fungi_combined=read_csv( "/home/ioannis.kampouris/DiControl_JKI_Phase3_repos/MS3_results/Fungal_Responders_OTU_levels_MS3.csv")
+pro_comibined=read_csv(file = "/home/ioannis.kampouris/DiControl_JKI_Phase3_repos/MS3_results/Resdonders_ASVs_log_regression_MS3.csv")
+ 
+
+get_fungal_otus=fungi_combined%>%mutate(ID2=str_replace_all(Taxa, ";.*", ""))%>%
+mutate(ID=str_replace(Taxa, ".*;", ""))%>%as.data.frame() %>%select(Taxa,ID,ID2)
+
+fungi_RA= read.table(paste0("/home/ioannis.kampouris/",
+                    "DiControl_JKI_Phase3_repos/",
+                    "MS3_correlation_network/",
+                    "otu_RH.fungi.Ioannis.txt"), sep=" ")%>%t()%>%
+  as.data.frame()
+
+
+fungi_RA=apply(fungi_RA, 1, function(x) 100*(x)/sum(x))%>%as.data.frame()%>%
+  rownames_to_column(var="Col")
+
+fungi_RA$OTU=paste0("OTU", row.names(fungi_RA))
+fungi_RA2=fungi_RA %>%select(-Col
+)%>%select(ID=OTU, everything())%>%
+column_to_rownames(var="ID")%>%t()%>%as.data.frame()
+  
+fungi_selected=fungi_RA2%>%select(get_fungal_otus$ID)%>%rownames_to_column(var="ID")
+
+
+significant_ASVs= pro_comibined%>%mutate(ASV=str_replace(Taxa, ".*.ASV", "ASV"))%>%mutate(Taxa=str_replace_all(Taxa, ";", "_"))
+significant_ASVs2=ASV_RH[unique(significant_ASVs$ASV),]
+
+
+HSI_CT_RW=read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/Hormones_and_Stress_Ind_Central_and_RW.xlsx"))%>%
+  mutate(ID=paste0(TILLAGE_TYPE,"-",FERTILIZATION,"-",Bms,"-",REPLICATE ))%>%
+  filter(PLOT=="central")%>%
+  filter(LOCATION=="shoot")
+HSI_CT_RW2=HSI_CT_RW[,c(1, 10:ncol(HSI_CT_RW))]
+
+stress_CT_RW= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/Hormones_and_Stress_Ind_Central_and_RW.xlsx"), 
+    sheet = "Stress_Indicator")%>%
+  mutate(ID=paste0(TILLAGE_TYPE,"-",FERTILIZATION,"-",Bms,"-",REPLICATE ))%>%
+  filter(PLOT=="central")%>%
+  filter(LOCATION=="shoot")
+
+stress_CT_RW2=stress_CT_RW[,c(1, 10:ncol(stress_CT_RW))]
+
+
+root_CT_RW= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/Hormones_and_Stress_Ind_Central_and_RW.xlsx"))%>%
+  mutate(ID=paste0(TILLAGE_TYPE,"-",FERTILIZATION,"-",Bms,"-",REPLICATE ))%>%
+  filter(PLOT=="central")%>%
+  filter(LOCATION=="root")
+root_CT_RW2=root_CT_RW[,c(1, 10:ncol(root_CT_RW))]
+names_col=data.frame(name= paste0("Root-", colnames(root_CT_RW2[,2:ncol(root_CT_RW2)])))
+colnames(root_CT_RW2)<-c("ID",names_col$name)
+
+root_traits= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/Root_traits_LTE1_2020_RW_sorted.xlsx"))%>%
+  mutate(FERTILIZATION=str_replace(FERTILIZATION, "ensive",""))%>%
+  mutate(ID=paste0(TILLAGE_TYPE,"-",FERTILIZATION,"-",Bms,"-",REPLICATE ))%>%
+  mutate(ID=str_replace(ID, "BMc","I"))%>%
+  mutate(ID=str_replace(ID, "Ctrl","C"))
+root_traits2=root_traits[,c(1, 10:ncol(root_traits))]
+
+metabolites= read_excel(paste0("/home/ioannis.kampouris/",
+"DiControl_JKI_Phase3_repos/",
+"MS3_correlation_network/Metabolites_LTE1_2020_RW_sorted.xlsx"))%>%
+  mutate(FERTILIZATION=str_replace(FERTILIZATION, "ensive",""))%>%
+  mutate(ID=paste0(TILLAGE_TYPE,"-",FERTILIZATION,"-",Bms,"-",REPLICATE ))%>%
+  mutate(ID=str_replace(ID, "BMc","I"))%>%
+  mutate(ID=str_replace(ID, "Ctrl","C"))%>%filter(LOCATION=="tips")
+metabolites2=metabolites[,c(1, 10:ncol(metabolites))]
+
+```
+
+Apply geometric log transformations.
+
+```{r}
+significant_ASVs_loggm= as.data.frame( significant_ASVs2)%>%t()
+significant_ASVs_loggm=apply(significant_ASVs_loggm,2,
+        log_ratio) 
+
+
+RS_metadata=mutate(RS_metadata,Int=str_replace(`N-Fertilization_Intensity`,"ensive",""))%>%
+  mutate(Treatment=str_replace(Treatment, "Ctrl","C"))%>%
+  mutate(Treatment=str_replace(Treatment, "BMc","I"))%>%
+  mutate(Treatment=str_replace(Treatment, "BMc","I"))%>%
+  mutate(Block=str_replace(Block, "..2020.*",""))%>%
+  mutate(ID=paste0(Practice1,"-",Int,"-",Treatment,"-",Block))
+significant_ASVs_loggm2=cbind( RS_metadata[,c("Sample", "ID")],significant_ASVs_loggm[RS_metadata$Sample,])%>%select(-Sample)
+
+
+selected_fungal_samples= fungi_selected%>%select("ID", unique(get_fungal_otus$ID))%>%
+  mutate(ID=str_replace(ID, "RH_",""))%>%
+    mutate(ID=str_replace_all(ID, "_","-"))%>%
+  mutate(ID=str_replace(ID, "Ctrl","C-"))%>%
+  mutate(ID=str_replace(ID, "BM","I-"))
+
+joined=full_join(np_content,significant_ASVs_loggm2%>%as.data.frame(),
+                 by="ID")%>%full_join(Growth_stats, by="ID")%>%
+  full_join(deltacts, by="ID")%>%
+  full_join(., combined_count, by="ID")%>%
+  full_join(., selected_fungal_samples, by="ID")%>%
+  full_join(., HSI_CT_RW2, by="ID")%>%
+  full_join(., metabolites2, by="ID")%>%
+  full_join(., root_CT_RW2, by="ID")%>%
+  full_join(., stress_CT_RW2, by="ID")
+```
+Perform correlations 
+```{r}
+correlations=Hmisc::rcorr(as.matrix( joined[,11:ncol(joined)]), type = "pearson")
+flat_cor= flattenCorrMatrix(correlations$r, correlations$P)
+flat_cor$padj=p.adjust(flat_cor$p, method = "BH")
+flat_cor=filter(flat_cor,padj<0.05&abs(cor)>0.8)
+#Positive or Negative Correlation>
+flat_cor$Correlation=flat_cor$cor
+flat_cor$Correlation[flat_cor$Correlation>0]<-"Positive"
+flat_cor$Correlation[flat_cor$Correlation<0]<-"Negative"
+```
+Construct a Network with all correlations and all
+Positive correlations
+```{r}
+g=graph_from_data_frame(flat_cor, directed = F)
+g_positive=graph_from_data_frame(flat_cor%>%filter(cor>0.8), directed = F)
+
+E(g)$weight= 1+(   ((flat_cor$cor)))
+ 
+network_metadata= rbind(data.frame(name=unique(colnames(significant_ASVs_loggm[,1:ncol(significant_ASVs_loggm)])), info="Bacterial_Taxa"),
+data.frame(name=c(paste0(get_fungal_otus$ID)), info="Fungal_Taxa"),
+data.frame(name="VALUE", info="Plant-Growth"),
+data.frame(name=combined_count[,2:ncol(combined_count)]%>%colnames()%>%unique(),
+info="Functional Genes (Metagenome)"),
+data.frame(name=deltacts[,2:ncol(deltacts)]%>%colnames()%>%unique(), info="Plant Genes (Expression levels)"),
+data.frame(name=HSI_CT_RW2[,2:ncol(HSI_CT_RW2)]%>%colnames()%>%unique(), info="Shoot-Hormones"),
+data.frame(name=metabolites2[,2:ncol(metabolites2)]%>%colnames()%>%unique(), info="Metabolites-RW"),
+data.frame(name=root_CT_RW2[,2:ncol(root_CT_RW2)]%>%colnames()%>%unique(), info="Root-Hormones"),
+data.frame(name=stress_CT_RW2[,2:ncol(stress_CT_RW2)]%>%colnames()%>%unique(), info="Stress-Factors"),
+
+data.frame(name=np_content[,11:ncol(np_content)]%>%colnames()%>%unique(), info="Nutrients"))
+
+```
+Cluster the variables into modules (if you want)
+```{r}
+E(g)$w=E(g)$cor
+E(g)$w[E(g)$w<0]<-0.1
+l=layout_with_fr(g, weights =(E(g)$w)^2,niter = 1000)
+network_table= ggnetwork(g, layout=l)
+
+modules= cluster_louvain(
+  g_positive,
+  weights =E(g_positive)$cor,
+  resolution = 10^(-2)
+  )
+
+table(modules$membership)
+#Extract the Clusters
+modules2= rbind(data.frame(name=((modules[1])), Module="Large Module 1")%>%select(name=`X1`,Module),
+      data.frame(name=((modules[3])), Module="Large Module 2")%>%select(name=`X3`,Module))
+
+length(modules[[1]])
+length(modules[[3]])
+
+complete_network1= full_join(network_metadata,network_table, by="name")%>%
+  full_join(modules2, by="name")
+complete_network1$Module[is.na( complete_network1$Module)]<-"Smaller Modules"
+#Plot the network.
+netwkork_graph1= complete_network1%>% ggplot( aes(x = x, y = y, 
+xend = xend, yend = yend))+ 
+  geom_edges(aes(colour=Correlation),curvature=0.5)+geom_nodes(size=5,
+ aes(fill=info, shape=Module), alpha=9,
+colour="black"
+)+  scale_shape_manual(values = c(21,22,23,24,25), name="Modules")+
+theme_void()+scale_fill_manual(values = c(
+"#d73027",
+"#f46d43",
+"#fdae61",
+"#fee090",
+"#ffffbf",
+"#e0f3f8",
+"white",
+"#abd9e9",
+"#74add1",
+"#4575b4",
+"black"
+  
+  ), name="Variables")+
+  scale_colour_manual(name="Correlation", values = c(
+"#d95f02", "#1b9e77"))+ 
+  guides(fill = guide_legend(override.aes = list(shape = 21, size=10)))+ 
+  guides(colour = guide_legend(override.aes = list(shape = 21, size=10)))+
+  theme(legend.text = element_text( size=20, face="bold", colour = "black")) + 
+  theme(legend.title =  element_text( size=30, face="bold", colour = "black")) +
+  theme(legend.text = element_text( size=20, face="bold", colour = "black")) + 
+  guides(color = guide_legend(override.aes = list(size = 20, linewidth = 5) ) )+ 
+  guides(shape = guide_legend(override.aes = list(size = 10) ) )
+
+ png(filename =  paste0("/home/ioannis.kampouris/",
+ "DiControl_JKI_Phase3_repos/",
+ "MS3_correlation_network/correlation_network.png"), width = 1500, height = 1000)
+  print(ggarrange(netwkork_graph1))
+  dev.off()
+  
+ 
+```
+
+```{r, fig.width=10, fig.height=10, fig.fullwidth=TRUE}
+print( netwkork_graph1)
+names2=rbind( get_fungal_otus2=filter(get_fungal_otus%>%select(Taxa,name=ID), name %in% unique(modules2$name)),
+significant_ASVs3=filter(significant_ASVs%>%select(Taxa,name=ASV), name %in% unique(modules2$name)))%>%as.data.frame()%>%
+  full_join(modules2, by="name")
+names2=names2[!duplicated(names2$name),]
+ 
+write.csv(names2%>%full_join(network_metadata, by="name")%>%
+filter(Module!="NA")%>%
+  mutate(name=str_replace(name, "VALUE","Plant-Growth"))%>%
+  select(Variable=name, Variable_Group=info, everything()), file =  paste0("/home/ioannis.kampouris/",
+ "DiControl_JKI_Phase3_repos/",
+ "MS3_correlation_network/correlation_clusters.csv"))
+
+```
