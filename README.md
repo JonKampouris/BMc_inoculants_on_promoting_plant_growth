@@ -16,3 +16,6 @@ Using a comprehensive, multidisciplinary approach, we investigate the effects of
 Conclusions 
 
 Our findings highlight the multifaceted benefits of BMc inoculation on plant fitness, significantly influencing metabolism, stress responses, and the rhizosphere microbiome. These improvements are crucial for advancing sustainable agricultural practices by enhancing plant resilience and productivity. 
+
+<h2>Funding </h2>
+This work was supported by the German Federal Ministry of Education and Research (BMBF, Germany) within the framework of the project DiControl (http://dicontrol.igzev.de/de/; grant number 031B0514A- E) as part of the BonaRes funding initiative ‘Soil as a sustainable resource for the bioeconomy’ (https://www.bonares.de). 
