@@ -1,7 +1,7 @@
 <h1> GitHub reporitory for</h1>
 <h2> Microbial inoculants modulate the rhizosphere microbiome, alleviate plant stress responses and enhance maize growth at field scale </h2>
 <h3> by  Davide Francioli, Ioannis D. Kampouris, Theresa Kuhl-Nagel, Doreen Babin, Loreen Sommermann, Jan H. Behr, 
-  Soumitra Paul Chowdhury, Narges Moradtalab, Michael Schloter, Jörg Geistlinger, Uwe Ludewig, Günter Neumann, Kornelia Smalla, Rita Grosch </h3>
+  Soumitra Paul Chowdhury, Rita Zrenner, Narges Moradtalab, Michael Schloter, Jörg Geistlinger, Uwe Ludewig, Günter Neumann, Kornelia Smalla, Rita Grosch </h3>
 
 **Abstract**
 
