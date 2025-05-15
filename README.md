@@ -21,7 +21,6 @@ Our findings highlight the multifaceted benefits of BMc inoculation on plant fit
 This work was supported by the German Federal Ministry of Education and Research (BMBF, Germany) within the framework of the project DiControl (http://dicontrol.igzev.de/de/; grant number 031B0514A- E) as part of the BonaRes funding initiative ‘Soil as a sustainable resource for the bioeconomy’ (https://www.bonares.de). 
 
 <h2> License </h2>
-Shield: [![CC BY 4.0][cc-by-shield]][cc-by]
 
 This work is licensed under a Creative Commons Attribution 4.0 International License
 
